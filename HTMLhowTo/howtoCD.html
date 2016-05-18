@@ -1,0 +1,202 @@
+<!--****************************************************************
+Cas Donoghue
+10APR2016
+HTML/CSS assignment1
+Web pg to meet specifications at https://oregonstate.instructure.com/courses/1583015/assignments/6730661?module_item_id=16767502
+*******************************************************************-->
+
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>BreweryDB HowTo</title>
+ <link rel="stylesheet" href="style.css" type="text/css">
+ </head>
+ <body>
+
+ <div id="intro stuff">
+
+	<div>
+	<img src="images/logoSwag.JPG" alt="Picture of ice cold beer on a sunny picnic table next to breweryDB logo" />
+	</div>
+
+	<h1>API How-To Guide </h1>
+	<h2>Cas Donoghue</h4>
+	<h5>OSU CS290 May2016</h5>
+
+	<h3 class="topic">Introduction</a></h3> 
+	<p class="description">
+	 	<a href="http://www.brewerydb.com/">BreweryDB</a>
+	 is a database for information about beer. A RESTful Web API provides access to crowdsourced beer information in the database.
+	 On this page I intend to demonstrate a method for connecting to the databse using the API.
+	 Usefull links inlcude the 
+	 	<a href="https://groups.google.com/forum/#!forum/brewerydb-api">Google Group</a> 
+	 and the
+	 	<a href="https://www.npmjs.com/package/brewerydb-node">brewerydb-node</a>
+	 wrapper.
+	 </p>
+ </div>
+ 	
+ <div id="getSetup">
+ 	<h3 class="topic">Get Set Up</a></h3> 
+ 	<p class="description">
+ 	Go to the 
+ 		<a href="http://www.brewerydb.com/developers">developers</a> 
+ 	page and create an account. Read through the terms and note that there is a free "base" service or a "premium" service available for a low monthly rate. For this demonstration I registered a base service app called CS290app. The API key was made instantly available. 
+ 	<div>
+	<img src="images/apiKeyBLANKED.JPG" alt="picture of succesfull registration" />
+	</div>
+ 	
+ <div id="basics">
+ 	<h3 class="topic">Get Started</a></h3> 
+ 	<p class="description">
+ 	Start by checking out the BreweryDB <a href="http://www.brewerydb.com/developers">documentation</a>! Let's start by simply connecting to the 
+ 	API. I will show an example using Advance Rest Client (ARC). Note that all requests require an API key. In this example I will simply send
+ 	a get request with my API key to make sure my key is valid/active. 
+ 	</p>
+	<div>
+	<img src="images/ARCreq1.JPG" alt="picture of arc get request" />
+	</div>
+	<p class="description">
+	Great! I have a sucessful request, so I know that BreweryDB likes my API key. Now let's use ARC to explore some of the endpoints of the API. 
+	There are currently 21 endpoints for Get requests to BreweryDB. These include, Beer, Brewery, Ingredients, even data about the appropriate
+	glass to drink a particular beer from!
+	</p>
+ </div>
+
+<div id="endpoints">
+ 	<h3 class="topic">Search Endpoint</a></h3> 
+ 	<p class="description">
+ 	As any beer lover in Corvallis, OR should agree, the best brewery in town is Block15 (the image at the top of the page was captured at the their taphouse). So let's use the Search endpoint to see if BreweryDB has any Block 15 data. From the documentation page we see that we 
+ 	route the request to the /search endpoint and provide our key as well as the search parameters in application/x-www-form-urlencoded strings
+ 	(in this case q=block15). 
+ 	</p>
+ 	<div>
+	<img src="images/ARCsearch.JPG" alt="picture of arc get search request" />
+	</div>
+	<p class="description">
+	Lovely! We see that there were 125 results with the first result being the exact match for block15! Now let's get away from ARC and try to 
+	use the BreweryDB API in a web application.  <b>SPECIAL NOTE:</b> Check out the brewery id that we found for block15 (A7Nqfu). We will use that later...
+	</p>
+
+<div id="Meat">
+ 	<h3 class="topic">Demo Web App</a></h3> 
+ 	<p class="description">
+ 	Here we will get into a demonstration of using information from BreweryDB in a web application. I choose this approach because it follows the structure of the material presented in our CS290 class. Specifically using node.js to serve a with express and handlebars. Unfortunately BreweryDB does not allow client side AJAX requests (I was hoping to do a simple demonstration like the openweathermaps example for this class). Instead we will need to set up a node. I choose to do this locally for this demonstration. 
+ 	Lets get Started!
+ 	</p>
+
+ 	<h3 class="topic">Overview</a></h3> 
+ 	<div>
+	<img src="images/fileStructure.JPG" alt="picture of file structure" />
+	</div>
+
+	<p class="description">
+ 	The above image is a representation of the file structure of the web app project. The entire project is contained in the <b>DemoApp</b> parent directory. The contents of the DemoApp directory are two folders and two files. The heart of the project is found in the <b>BDBdemo.js</b> file. This is the node javascript that is responsible for orchestrating the work that goes in to getting data from breweryDB and generating the HTML that is displayed. The <b>package.json</b> file is used in conjuction with npm and when npm install is run the <b>node_modules</b> folder is downloaded and installed on your system. The <b>views</b> folder is created for handlebars to store templating information for HTML generation. Now that we have an idea of what the structure is let's go through how to get set up. 
+ 	</p>
+
+ 	<h3 class="topic">Install packages</a></h3> 
+
+ 	<div>
+	<img src="images/install.JPG" alt="picture of install" />
+	</div>
+
+	<p class="description">
+ 	The above image shows the contents of the packages file in and an example call using the windows command prompt. The successful result of the command will be the appearance of the node_mondules folder. 
+ 	</p>
+
+ 	<h3 class="topic">CODE TIME!</a></h3> 
+
+ 	<h4 class="topic">BDBdemo.js part 1</a></h4> 
+
+ 	<div>
+	<img src="images/javascriptEx1.JPG" alt="picture of JS" />
+	</div>
+	<p class="description">
+ 	The above image shows the first 17 lines form the BDBdemo.js file. The content here is just the nitty gritty details for getting the express handlebars and request stuff for the node server. This just basically sets us up with the express handlebars stuff to get a server up and listening. 
+ 	</p>
+
+ 	<h4 class="topic">BDBdemo.js part 2</a></h4> 
+
+ 	<div>
+	<img src="images/javascriptEx2.JPG" alt="picture of JS" />
+	</div>
+	<p class="description">
+ 	Now this is what we came here for! This is the point where we are making a Get request to BreweryDB. The app.get framework is specific to express and handlebars while the request function is part of the request library. As you can see for this example I took the brewery id we got using ARC to query the brewery search end point and plugged it in to the brewery endpoint at the API. Note that I sent my key along with the request. I use the return content to feed returned parsed data from the API to my handlebars templates (see details below). Before we explore the output, let's see the rest of the javascript.
+ 	</p>
+
+ 	<h4 class="topic">BDBdemo.js part 2</a></h4> 
+
+	<div>
+	<img src="images/javascriptEx3.JPG" alt="picture of JS" />
+	</div>
+	<p class="description">
+ 	The rest of the BDBdemo.js file is just more "boilerplate" stuff for express and node to do their magic. Note that the server is listening at port 3000.  
+ 	</p>
+
+ 	<h4 class="topic">Handlebars</a></h4> 
+
+ 	<div>
+	<img src="images/views.JPG" alt="picture of handlebars" />
+	</div>
+	<p class="description">
+  	We are almost ready to see the exiting data we got from breweryDB. First let's see the relevent structure to let handlebars know where to put the API data in from the HTML template. The <b>Views</b> directory contains one folder and three .handlebars files. These are just templates that handlebars uses to format the web page. The only important piece that I want to focus on is the <b>BDBdemo.handlbars</b> code. This is where the parsed return data from BreweryDB will end up. Imagine these being inserted into a skeleton HTML document body. See that we have a brewery name, description, link to official website and image. 
+ 	</p>
+
+  	<h4 class="topic">Start Your Server</a></h4> 
+
+ 	<div>
+	<img src="images/startNode.JPG" alt="picture of exe" />
+	</div>
+	<p class="description">
+  	Use node to run BDBdemo.js. See that Express has started at http://locahost:3000. Now all we have to do is type that into a browser (chrome if ur awesome!). 
+ 	</p>
+
+	<h4 class="topic">WEB APP CLIENT VIEW!</a></h4> 
+ 	<div>
+	<img src="images/webApp.JPG" alt="picture of web app" />
+	</div>
+	<p class="description">
+  	And there we have it! Data straight from BreweryDB to the client. Note how the handlbars formatted the HTML the way we expected (such that we got the block15 logo to display!). 
+ 	</p>
+
+ 	<h3 class="topic">Cool! What Else?</a></h3> 
+
+	<p class="description">
+	Well that was pretty neat! But is it really that useful? Not really. To make a really useful app you would need a lot more data management and user interface. There are endless app possiblities that could use data from BreweryDB. For example there are apps available for mobile phones that couple map data and social media data with BreweryDB data that would allow you to make a beer roadtrip and brag about it on your social network. Lets consider how an "aftermarket" helper that may be of interest to us. 
+ 	</p>
+
+ 	<h3 class="topic">Service Libraries</a></h3> 
+ 	<p class="description">
+	In the API documentation there is a link to service libraries. It turns out there is one for node! Let's take a look at how 
+		<a href="https://www.npmjs.com/package/brewerydb-node">brewerydb-node</a> 
+	could simplify app design. You will see that you need to install it with npm install (not shown, its as easy as it sounds...). Lets look at the how the service library can simplify interface with the API beer search endpoint. I have focused a lot on my favorite local craft brewery. Let's switch gears and see how breweryDB describes the King of Beers ('merica!)
+ 	</p>
+
+ 	<div>
+	<img src="images/serviceLib.JPG" alt="picture of service call" />
+	</div>
+
+ 	<p class="description">
+ 	So after calling require and feeding the library my specific API key I can easily search beers without worrying about how to format my get request. There are many simplified options like this in the node library that could be quite useful for simplifying interface with BreweryDB.
+ 	</p>
+
+ 	<h3 class="topic">Conclusion</a></h3> 
+
+ 	<p class="description">
+ 	Well thats what I found out about BreweryDB. This is truly the first experience I've ever had with any kind of web development (as I'm sure is painfully obvious). 
+ 	</p>
+
+
+
+</div>
+
+ <div class="scroll">
+ </div>
+
+
+
+
+
+</body>
+</html>

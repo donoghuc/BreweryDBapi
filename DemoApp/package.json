@@ -1,0 +1,19 @@
+{
+  "name": "BDBdemo",
+  "version": "1.0.0",
+  "description": "Create a get-post Checker for assignment",
+  "main": "BDBdemo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "donoghuc",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.11.3",
+    "mysql": "^2.8.0",
+    "request": "^2.72.0"
+  }
+}
